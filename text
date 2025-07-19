@@ -1,0 +1,146 @@
+//Array to store Javascript Object
+let toDoList = [];
+let finishedToDo = 0;
+
+let resultContainer = document.querySelector(".result-container");
+
+//Check if the data is in Local storage. If they do, render the old data
+if (localStorage.getItem("JSON-toDoList")) {
+	toDoList = JSON.parse(localStorage.getItem("JSON-toDoList")); //Since data in local storage is JSON object, we need to convert them to Java Obj first before using in Array
+	display();
+}
+
+// Event Handler
+document.querySelector(".toDo").addEventListener("keydown", eventHandler);
+document.querySelector(".date").addEventListener("keydown", eventHandler);
+document.querySelector(".addBtn").onclick = add;
+document.querySelector(".clearBtn").onclick = clear;
+
+function eventHandler(event) {
+	if (event.key === "Enter") {
+		add();
+	}
+}
+
+function add() {
+	let input = document.querySelector(".toDo");
+	let filledToDo = input.value.trim();
+
+	let date = document.querySelector(".date");
+	let selectedDate = date.value;
+
+	//Create JS object for the array
+	const toDo = {
+		info: `${filledToDo}`,
+		date: `${selectedDate}`,
+		isFinished: false,
+	};
+
+	//Push the JS object to the array
+	if (filledToDo === "") {
+		alert("Please enter a task!");
+	} else {
+		toDoList.push(toDo);
+		display();
+	}
+
+	//save the toDoList to local storage
+	updateLocalStorage();
+	//Clear the input
+	input.value = "";
+}
+
+function display() {
+	//Clear the container first before rendering any updated result
+	resultContainer.innerHTML = "";
+	for (let i = 0; i < toDoList.length; i++) {
+		if (toDoList[i].isFinished) {
+			resultContainer.innerHTML += `
+			<li class="toDoResult finishedTask col-4" ">${toDoList[i].info}</li>
+			<div class="time col-4">${toDoList[i].date}</div>
+			<button class="btn col-4 btn-warning" onclick="remove(${i})">Delete</button>
+        `;
+		}
+		resultContainer.innerHTML += `
+			<li class="toDoResult col-4" ">${toDoList[i].info}</li>
+			<div class="time col-4">${toDoList[i].date}</div>
+			<button class="btn col-4 btn-warning" onclick="remove(${i})">Delete</button>
+        `;
+	}
+	tickedToDoList();
+	calculateProgressBar();
+	console.log(toDoList);
+}
+
+// Get the toDoResult we have created, which becomes array already
+function tickedToDoList() {
+	let tasks = document.querySelectorAll(".toDoResult");
+
+	tasks.forEach((task) => {
+		task.addEventListener("click", () => {
+			if (task.classList.contains("finishedTask")) {
+				return; // do nothing if already finished
+			} else {
+				task.classList.add("finishedTask");
+				isFinished = true;
+
+				finishedToDo += 1;
+				calculateProgressBar(); // update only if new tick
+			}
+		});
+	});
+
+	// tasks.forEach((task) => {
+	// 	task.addEventListener("click", () => {
+	// 		if (task.classList.contains("finishedTask")) {
+	// 			task.classList.remove("finishedTask");
+	// 			finishedToDo -= 1;
+	// 		} else {
+	// 			task.classList.add("finishedTask");
+	// 			finishedToDo += 1;
+	// 		}
+	// 		calculateProgressBar();
+	// 	});
+	// });
+}
+
+//To calculate the progess bar
+
+function calculateProgressBar() {
+	const progressBar = document.querySelector(".progress-bar");
+
+	if (toDoList.length === 0) {
+		progressBar.style.width = 0 + "%";
+	} else {
+		let progressPercent = (finishedToDo / toDoList.length) * 100; // this calculation can lead to Null if the toDoList equals to zero which prevent the progress bar from update dynamically, therefore, we should add condition if toDoList.lenght ===0
+
+		// Update the width
+		progressBar.style.width = progressPercent + "%";
+	}
+}
+function remove(index) {
+	if (toDoList.length !== 0) {
+		finishedToDo -= 1;
+		toDoList.splice(index, 1);
+		updateLocalStorage();
+		display();
+	}
+}
+
+function clear() {
+	if (toDoList.length === 0) {
+		alert("Nothing to clear!");
+	} else {
+		finishedToDo = 0;
+
+		toDoList = [];
+		updateLocalStorage();
+		calculateProgressBar(); // ✅ Reset progress bar to 0%
+
+		display();
+	}
+}
+
+function updateLocalStorage() {
+	localStorage.setItem("JSON-toDoList", JSON.stringify(toDoList));
+}
