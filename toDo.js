@@ -44,6 +44,8 @@ function add() {
 	toDoList.push(toDo);
 	updateLocalStorage();
 	display();
+	showEmptyTask();
+
 	input.value = "";
 }
 
@@ -57,11 +59,17 @@ function display() {
 		}
 
 		resultContainer.innerHTML += `
-			<li class="toDoResult col-4 ${
-				task.isFinished ? "finishedTask" : ""
-			}" data-index="${index}">${task.info}</li>
-			<div class="time col-4">${task.date}</div>
-			<button class="btn col-4 btn-warning" onclick="remove(${index})">Delete</button>
+			<li  class="task d-flex flex-row justify-content-between mb-3 flex-wrap" >
+    <div class="d-flex flex-row align-items-center justify-content-center ">
+        <p class="mx-3    mb-0 me-3 toDoResult   ${
+					task.isFinished ? "finishedTask" : ""
+				}"  data-index='${index}'>${task.info}</p>
+        <span class="badge time ">${task.date}</span>
+    </div>
+    <button class="btn deleteBtn ms-auto" onclick="remove(${index})">Delete</button>
+</li>
+
+			
 		`;
 	});
 
@@ -100,6 +108,7 @@ function remove(index) {
 	toDoList.splice(index, 1);
 	updateLocalStorage();
 	display();
+	showEmptyTask();
 }
 
 function clear() {
@@ -108,6 +117,7 @@ function clear() {
 		return;
 	}
 	toDoList = [];
+	showEmptyTask();
 	updateLocalStorage();
 	display();
 	calculateProgressBar();
@@ -116,3 +126,14 @@ function clear() {
 function updateLocalStorage() {
 	localStorage.setItem("JSON-toDoList", JSON.stringify(toDoList));
 }
+
+function showEmptyTask() {
+	let taskState = document.querySelector(".task-state");
+	if (toDoList.length > 0) {
+		taskState.classList.add("invisible");
+	} else {
+		taskState.classList.remove("invisible");
+	}
+}
+
+showEmptyTask();

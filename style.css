@@ -1,3 +1,103 @@
+:root{
+    --primary:#97B067;
+        --secondary:#394648;
+
+        --warning: #69995D;
+
+    --info: #FEFCFD;  
+    --trans:     #96b0673f;
+
+    
+}
+
+body{
+    color: var(--secondary);
+    font-family: 'Courier New', Courier, monospace;
+
+}
+
+nav{
+    background-color: var(--primary);
+}
+
+.brand{
+    text-decoration: none;
+    transition: color 1s ease, transform 0.3s ease;
+}
+
+.brand:hover{
+    color: var(--warning) !important;   
+    transform: scale(1.1);
+}
+
+.first-section{
+    position: relative;
+}
+
+.btn{
+    background-color: var(--primary) !important;
+    color: white;
+    transition: opacity 1s ease;
+}
+
+.btn:hover{
+    color: white;
+    opacity: 0.6;
+}
+
+.addBtn, .clearBtn{
+    width: 20%;
+}
+
+.result-section{
+    margin-top: 50px;
+border: 2px solid var(--warning);
+    border-radius: 12px;
+height: 60vh;}
+    
+
+
+
+#toDo-section{
+    margin-top: 40% ;
+}
+
+.toDo{
+    width: 30vw;
+    border: 2px solid var(--warning);
+    border-radius: 12px;
+    padding: 10px 10px;
+}
+
+.date{
+        width: 10vw;
+    font-size: 16px;
+    border: 2px solid var(--warning);
+    border-radius: 12px;
+    padding: 10px 10px;
+    background-color: #96b0673f;
+}
+
+.task{
+    background-color: #96b0673f;
+}
+
+.badge{
+    background-color: #97B067;
+}
+
+.progress{
+    margin: 50px;
+        background-color: var(--trans);
+
+}
+
+.progress-bar{
+        background-color: #69995D;
+
+}
+
+
 .finishedTask{
     text-decoration: line-through;
 }
